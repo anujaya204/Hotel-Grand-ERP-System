@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reservations - Hotel Grand ERP</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { active: 'reservations' }) %>
+    <div class="main">
+      <div class="topbar">
+        <h1>Reservations</h1>
+        <form class="logout-form" method="POST" action="/logout"><button type="submit">Logout</button></form>
+      </div>
+
+      <div class="card">
+        <h3>New Reservation</h3>
+        <% if (guests.length === 0) { %>
+          <p style="color:#c0392b;">Add a guest first in the Guest Management module.</p>
+        <% } else if (rooms.length === 0) { %>
+          <p style="color:#c0392b;">No available rooms. Free up a room in Room Management first.</p>
+        <% } else { %>
+        <form class="form-inline" method="POST" action="/reservations">
+          <div class="field">Guest
+            <select name="guest_id" required>
+              <% guests.forEach(g => { %><option value="<%= g.id %>"><%= g.full_name %></option><% }) %>
+            </select>
+          </div>
+          <div class="field">Room
+            <select name="room_id" required>
+              <% rooms.forEach(r => { %><option value="<%= r.id %>"><%= r.room_number %> (<%= r.room_type %>)</option><% }) %>
+            </select>
+          </div>
+          <div class="field">Check-In<input type="date" name="check_in" required /></div>
+          <div class="field">Check-Out<input type="date" name="check_out" required /></div>
+          <button class="btn" type="submit">Book Room</button>
+        </form>
+        <% } %>
+      </div>
+
+      <div class="card">
+        <h3>All Reservations</h3>
+        <table>
+          <thead><tr><th>#</th><th>Guest</th><th>Room</th><th>Check-In</th><th>Check-Out</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <% reservations.forEach(r => { %>
+              <tr>
+                <td>#<%= r.id %></td>
+                <td><%= r.full_name %></td>
+                <td><%= r.room_number %></td>
+                <td><%= r.check_in %></td>
+                <td><%= r.check_out %></td>
+                <td><span class="badge <%= r.status.toLowerCase() %>"><%= r.status %></span></td>
+                <td>
+                  <% if (r.status === 'Confirmed' || r.status === 'CheckedIn') { %>
+                    <form class="action-form" method="POST" action="/reservations/<%= r.id %>/checkout">
+                      <button class="small-btn green" type="submit">Check-Out & Bill</button>
+                    </form>
+                    <form class="action-form" method="POST" action="/reservations/<%= r.id %>/cancel" onsubmit="return confirm('Cancel this reservation?')">
+                      <button class="small-btn red" type="submit">Cancel</button>
+                    </form>
+                  <% } else { %>
+                    <span style="color:#9ca3af; font-size:12px;">No actions</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

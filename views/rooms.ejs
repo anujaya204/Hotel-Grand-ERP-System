@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Room Management - Hotel Grand ERP</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { active: 'rooms' }) %>
+    <div class="main">
+      <div class="topbar">
+        <h1>Room Management</h1>
+        <form class="logout-form" method="POST" action="/logout"><button type="submit">Logout</button></form>
+      </div>
+
+      <div class="card">
+        <h3>Add New Room</h3>
+        <form class="form-inline" method="POST" action="/rooms">
+          <div class="field">Room Number<input type="text" name="room_number" required /></div>
+          <div class="field">Type
+            <select name="room_type">
+              <option>Standard</option>
+              <option>Deluxe</option>
+              <option>Suite</option>
+            </select>
+          </div>
+          <div class="field">Price / Night<input type="number" name="price_per_night" step="0.01" required /></div>
+          <div class="field">Status
+            <select name="status">
+              <option>Available</option>
+              <option>Occupied</option>
+              <option>Maintenance</option>
+            </select>
+          </div>
+          <button class="btn" type="submit">Add Room</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>All Rooms</h3>
+        <table>
+          <thead><tr><th>Room #</th><th>Type</th><th>Price/Night</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <% rooms.forEach(r => { %>
+              <tr>
+                <td><%= r.room_number %></td>
+                <td><%= r.room_type %></td>
+                <td>Rs. <%= r.price_per_night.toLocaleString() %></td>
+                <td><span class="badge <%= r.status.toLowerCase() %>"><%= r.status %></span></td>
+                <td>
+                  <form class="action-form" method="POST" action="/rooms/<%= r.id %>/update">
+                    <select name="status" onchange="this.form.submit()">
+                      <option value="Available" <%= r.status==='Available'?'selected':'' %>>Available</option>
+                      <option value="Occupied" <%= r.status==='Occupied'?'selected':'' %>>Occupied</option>
+                      <option value="Maintenance" <%= r.status==='Maintenance'?'selected':'' %>>Maintenance</option>
+                    </select>
+                  </form>
+                  <form class="action-form" method="POST" action="/rooms/<%= r.id %>/delete" onsubmit="return confirm('Delete this room?')">
+                    <button class="small-btn red" type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Billing - Hotel Grand ERP</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { active: 'billing' }) %>
+    <div class="main">
+      <div class="topbar">
+        <h1>Billing</h1>
+        <form class="logout-form" method="POST" action="/logout"><button type="submit">Logout</button></form>
+      </div>
+
+      <div class="card">
+        <h3>All Bills</h3>
+        <p style="color:#6b7280; font-size:13px; margin-top:-8px;">
+          Bills are generated automatically when a reservation is checked out.
+        </p>
+        <table>
+          <thead><tr><th>#</th><th>Guest</th><th>Room</th><th>Room Charge</th><th>Tax</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <% bills.forEach(b => { %>
+              <tr>
+                <td>#<%= b.id %></td>
+                <td><%= b.full_name %></td>
+                <td><%= b.room_number %></td>
+                <td>Rs. <%= b.room_charge.toLocaleString() %></td>
+                <td>Rs. <%= b.tax.toLocaleString() %></td>
+                <td><b>Rs. <%= b.total.toLocaleString() %></b></td>
+                <td><span class="badge <%= b.payment_status.toLowerCase() %>"><%= b.payment_status %></span></td>
+                <td>
+                  <% if (b.payment_status === 'Unpaid') { %>
+                    <form class="action-form" method="POST" action="/billing/<%= b.id %>/pay">
+                      <button class="small-btn blue" type="submit">Mark Paid</button>
+                    </form>
+                  <% } else { %>
+                    <span style="color:#9ca3af; font-size:12px;">Settled</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+            <% if (bills.length === 0) { %>
+              <tr><td colspan="8" style="color:#9ca3af;">No bills yet. Check out a reservation to generate one.</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

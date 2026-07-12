@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - Hotel Grand ERP</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { active: 'dashboard' }) %>
+    <div class="main">
+      <div class="topbar">
+        <h1>ERP Dashboard</h1>
+        <form class="logout-form" method="POST" action="/logout">
+          <button type="submit">Logout (<%= user.username %>)</button>
+        </form>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="num"><%= stats.totalRooms %></div><div class="label">Total Rooms</div></div>
+        <div class="stat-card"><div class="num"><%= stats.availableRooms %></div><div class="label">Available Rooms</div></div>
+        <div class="stat-card"><div class="num"><%= stats.occupiedRooms %></div><div class="label">Occupied Rooms</div></div>
+        <div class="stat-card"><div class="num"><%= stats.totalGuests %></div><div class="label">Registered Guests</div></div>
+        <div class="stat-card"><div class="num"><%= stats.activeReservations %></div><div class="label">Active Reservations</div></div>
+        <div class="stat-card"><div class="num"><%= stats.unpaidBills %></div><div class="label">Unpaid Bills</div></div>
+        <div class="stat-card"><div class="num">Rs. <%= stats.revenue.toLocaleString() %></div><div class="label">Revenue Collected</div></div>
+      </div>
+
+      <div class="card">
+        <h3>Recent Reservations</h3>
+        <table>
+          <thead><tr><th>#</th><th>Guest</th><th>Room</th><th>Check-In</th><th>Check-Out</th><th>Status</th></tr></thead>
+          <tbody>
+            <% recentReservations.forEach(r => { %>
+              <tr>
+                <td>#<%= r.id %></td>
+                <td><%= r.full_name %></td>
+                <td><%= r.room_number %></td>
+                <td><%= r.check_in %></td>
+                <td><%= r.check_out %></td>
+                <td><span class="badge <%= r.status.toLowerCase() %>"><%= r.status %></span></td>
+              </tr>
+            <% }) %>
+            <% if (recentReservations.length === 0) { %>
+              <tr><td colspan="6" style="color:#9ca3af;">No reservations yet. Go to the Reservations module to create one.</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Business Process Flow</h3>
+        <p style="color:#6b7280; font-size: 14px; line-height:1.6;">
+          Guest Management → Reservation created (room auto-marked Occupied) → Guest checks out
+          (bill auto-generated, room auto-marked Available) → Billing module records payment.
+          This demonstrates process integration across modules rather than isolated screens.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

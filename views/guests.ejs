@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Guest Management - Hotel Grand ERP</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { active: 'guests' }) %>
+    <div class="main">
+      <div class="topbar">
+        <h1>Guest / Customer Management</h1>
+        <form class="logout-form" method="POST" action="/logout"><button type="submit">Logout</button></form>
+      </div>
+
+      <div class="card">
+        <h3>Register New Guest</h3>
+        <form class="form-inline" method="POST" action="/guests">
+          <div class="field">Full Name<input type="text" name="full_name" required /></div>
+          <div class="field">Email<input type="email" name="email" /></div>
+          <div class="field">Phone<input type="text" name="phone" /></div>
+          <div class="field">NIC / Passport<input type="text" name="nic_passport" /></div>
+          <button class="btn" type="submit">Add Guest</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>All Guests</h3>
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>NIC/Passport</th><th>Actions</th></tr></thead>
+          <tbody>
+            <% guests.forEach(g => { %>
+              <tr>
+                <td>#<%= g.id %></td>
+                <td><%= g.full_name %></td>
+                <td><%= g.email || '-' %></td>
+                <td><%= g.phone || '-' %></td>
+                <td><%= g.nic_passport || '-' %></td>
+                <td>
+                  <form class="action-form" method="POST" action="/guests/<%= g.id %>/delete" onsubmit="return confirm('Delete this guest?')">
+                    <button class="small-btn red" type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
