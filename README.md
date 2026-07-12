@@ -49,8 +49,4 @@ public/css/         Stylesheet
 - `reservations` (guest_id, room_id, check_in, check_out, status)
 - `bills` (reservation_id, room_charge, tax, total, payment_status)
 
-## Deployment to Azure App Service
-See `DEPLOYMENT.md` for the exact step-by-step commands used to deploy this project.
 
-## Academic Note
-This is a prototype built to demonstrate ERP concepts (process integration, module design, cloud deployment) for an academic assignment — not a production-grade or commercial hotel management system.
